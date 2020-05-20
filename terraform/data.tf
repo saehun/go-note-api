@@ -4,10 +4,12 @@ data "aws_s3_bucket" "go-note-api" {
   bucket = "go-note-api"
 }
 
-output "account_id" {
-  value = data.aws_caller_identity.current.account_id
+data "aws_route53_zone" "go-note-api" {
+  name = "overthecode.io."
 }
 
-output "s3_bucket" {
-  value = data.aws_s3_bucket.go-note-api.bucket
+data "aws_acm_certificate" "go-note-api" {
+  domain      = "overthecode.io"
+  types       = ["AMAZON_ISSUED"]
+  most_recent = true
 }
