@@ -49,3 +49,37 @@ resource "aws_lambda_permission" "go-note-api" {
 resource "aws_cloudwatch_log_group" "go-note-api" {
   name = "/aws/lambda/go-note-api"
 }
+
+
+resource "aws_iam_policy" "go-note-api-dynamodb" {
+  name = "LambdaPolicy_GoNoteAPI"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Scan",
+        "dynamodb:Query",
+        "dynamodb:UpdateItem",
+        "dynamodb:ListTable",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:DescribeLimits",
+        "dynamodb:GetRecords"
+      ],
+      "Resource": "arn:aws:dynamodb:ap-northeast-2:${data.aws_caller_identity.current.account_id}:table/go-note-api"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "go-note-api-dynamodb" {
+  role       = aws_iam_role.go-note-api.name
+  policy_arn = aws_iam_policy.go-note-api-dynamodb.arn
+}
