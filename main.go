@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"context"
+
+	"github.com/aws/aws-lambda-go/lambda"
+)
+
+func HandleRequest(ctx context.Context) (string, error) {
+	return "Hello overthecode!", nil
+}
 
 func main() {
-	fmt.Println("go-note-api")
+	lambda.Start(HandleRequest)
 }
