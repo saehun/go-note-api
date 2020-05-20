@@ -29,5 +29,41 @@ func createServer() *echo.Echo {
 		return c.JSON(http.StatusCreated, note)
 	})
 
+	e.GET("/note/:user", func(c echo.Context) error {
+		user := c.Param("user")
+		id := c.QueryParam("from")
+		notes, err := getNotes(user, id)
+
+		if err != nil {
+			c.Error(err)
+		}
+		return c.JSON(http.StatusOK, notes)
+	})
+
+	e.PUT("/note/:user/:id", func(c echo.Context) error {
+		user := c.Param("user")
+		id := c.Param("id")
+		body := &note{}
+		if err := c.Bind(body); err != nil {
+			return err
+		}
+
+		note, err := updateNote(user, id, *body)
+		if err != nil {
+			c.Error(err)
+		}
+
+		return c.JSON(http.StatusCreated, note)
+	})
+
+	e.DELETE("/note/:user/:id", func(c echo.Context) error {
+		user := c.Param("user")
+		id := c.Param("id")
+		if err := deleteNote(user, id); err != nil {
+			c.Error(err)
+		}
+		return c.NoContent(http.StatusAccepted)
+	})
+
 	return e
 }
