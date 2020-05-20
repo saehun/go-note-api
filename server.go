@@ -10,7 +10,7 @@ import (
 func createServer() *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORS())
-	e.GET("/", func(c echo.Context) error {
+	e.GET("/note", func(c echo.Context) error {
 		return c.NoContent(http.StatusOK)
 	})
 
